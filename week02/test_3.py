@@ -1,4 +1,43 @@
+'''
+จงเขียนโปรแกรมโดยใช้ Stack เพื่อคำนวณหา ค่าของนิพจน์แบบ postfix 
 
+โดยให้แสดงผลลัพธ์ตามตัวอย่าง
+
+
+
+class Stack():
+
+    def __init__(self, ls = None):
+
+    def push(self,i):
+
+    def pop(self):
+
+    def isEmpty(self):
+
+    def size(self):
+
+def postFixeval(st):
+
+    s = Stack()
+
+    ### Enter Your Code Here ###
+
+    return s.pop()
+
+            
+
+
+print(" ***Postfix expression calcuation***")
+
+token = list(input("Enter Postfix expression : ").split())
+
+
+
+print("Answer : ",'{:.2f}'.format(postFixeval(token)))
+
+
+'''
 
 
 class Stack():
