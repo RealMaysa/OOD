@@ -34,7 +34,26 @@ while not s.isEmpty():
 print(s.size(),"Data in stack : ",s.items)
 '''
 
+class Stack:
 
+
+    def __init__(self):
+        self.items=[]
+        
+
+    def push(self,i):
+
+        self.items.append(i)
+        
+
+    def pop(self):
+        return self.items.pop()
+
+    def isEmpty(self):
+        return self.items == []
+
+    def size(self):
+        return len(self.items)
 print(" *** Stack implement by Python list***")
 
 ls = [e for e in input("Enter data to stack : ").split()]

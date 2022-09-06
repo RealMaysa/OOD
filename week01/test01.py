@@ -1,3 +1,4 @@
+
 print('*** Converting hh.mm.ss to seconds ***')
 h,m,s = input('Enter hh mm ss : ').split()
 
