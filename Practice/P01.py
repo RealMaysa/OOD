@@ -1,6 +1,4 @@
 
-
-
 class Stack:
     def __init__(self,L=None):
         if L==None:
@@ -26,22 +24,4 @@ class Stack:
     def size(self):
         return len(self.item)
 
-
-print(" *** Stack implement by Python list***")
-
-ls = [e for e in input("Enter data to stack : ").split()]
-
-s = Stack()
-
-for e in ls:
-
-    s.push(e)
-
-print(s.size(),"Data in stack : ",s.item)
-
-while not s.isEmpty():
-
-    s.pop()
-
-print(s.size(),"Data in stack : ",s.item)
         
