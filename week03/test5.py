@@ -1,3 +1,9 @@
+'''ให้น้องๆใช้ Linked List (เขียนเป็น class)  ในการทำ Radix Sort  (มีอยู่ในสไลด์เรียน 2 หน้าสุดท้าย)  ในรูปแบบมากไปน้อย
+
+โดยผลลัพธ์ให้ออกมาเป็นการทำ Radix Sort แบบจำนวนรอบน้อยที่สุด และแสดงผลในแต่ละรอบว่าได้ผลลัพธ์เป็นอย่างไร  3 บรรทัดสุดท้ายจะเป็น ( จำนวนรอบที่น้อยที่สุด , Data ก่อนทำ Radix Sort และ Data หลังทำ Radix Sort )
+
+'''
+
 class SinglyLinkedListNoDummy :     
     class Node :                    
         def __init__(self, data, next = None) :
@@ -116,53 +122,60 @@ minVal = 0
 radix = input("Enter Input : ").split(" ")
 L = SinglyLinkedListNoDummy()
 nL = SinglyLinkedListNoDummy()
+#เริ่มจาก หาจำนวนหลักที่มากที่สุด โดยใช้การค่าหาจำนวนเลขที่มากที่สุดแล้วเก็บค่าความยาวไว้ 
 for e in radix :
     currentDigit = int(e)
     if maxVal < currentDigit and currentDigit >=0:
         maxVal = currentDigit
-        maxDigit = len(str(currentDigit))
-    elif minVal > currentDigit and currentDigit < 0 :
+        maxDigit = len(str(currentDigit)) #จำนวนหลักของMaxVal
+    elif minVal > currentDigit and currentDigit < 0 : #กรณีเป็นเลขติดลบ
         minVal = currentDigit
-        maxDigitNev = len(str(currentDigit))-1
+        maxDigitNev = len(str(currentDigit))-1 #-1 เพราะไม่นับความยาวของเครื่องหมายลบ
+    #หลุดจาก if กับ elif ตอนต้นแล้วมาเช็คกับ if else ข้างล่างนี้
+    #สร้าง SinglyLinkList จาก List ของ radix ที่รับเข้ามา ถ้าเป็นจำนวนเต็มบวกเก็บในL จำนวนเต็มลบเก็บใน nL
     if int(e) >= 0:
-        L.append(str(e))
+            L.append(str(e))
     else :
-        nL.append(str(e)[1:])
+            nL.append(str(e)[1:]) #ใส่ค่าตั้งแต่ตัวที่ 1 ไปยังตัวสุดท้าย
+
+#กรณีตัวเลขจากmaxdigitที่ติดลบมีจำนวนหลักมากกว่าจำนวนที่ไม่ติดลบ
 if maxDigitNev >= maxDigit:
     digitcap = maxDigitNev
 else :
     digitcap = maxDigit
+
 beforeRadix = " -> ".join(radix)
 digit = -1
-indx=0
-digitList = [SinglyLinkedListNoDummy() for e in range(maxDigit+1)]
-while indx < maxDigit+1 :
-    if indx != 0:
-        for i in range(10) :
+indx= 0
+digitList = [SinglyLinkedListNoDummy() for e in range(maxDigit+1)] #Listที่สร้าง SinglyLinkedList ตามจำนวนตั้งแต่0 จนถึง maxDigit+1 ตามจำนวนหลัก
+while indx < maxDigit+1 : #ทำตามจำนวนหลัก สมมุติ หลักที่มากสุดเป็น 3 จะทำการวน 3 รอบ 0->1->2->3
+    if indx != 0: #ตรวจสอบหลักถัดไป
+        for i in reversed(range(10)) :
             headDigit = digitList[indx-1].head
             while headDigit != None:
-                if len(str(headDigit.data)) < -digit and i == 0:
-                        digitList[indx].append(headDigit.data)
+                if len(str(headDigit.data)) < -digit and i == 0: #จำนวนหลักน้อยกว่า
+                            digitList[indx].append(headDigit.data) 
                 elif len(str(headDigit.data)) >= -digit:
                     if i == int(str(headDigit.data)[digit]):
-                        digitList[indx].append(headDigit.data)
+                            digitList[indx].append(headDigit.data)
                 headDigit = headDigit.next
-    else :
-        for i in range(10) :
+    else : #ตรวจสอบหลักหน่วยของNodeใน L
+        for i in reversed(range(10)) : #ใช้reverseเนื่องจากเราจะ sort จากมากไปน้อย
             headDigit = L.head
+            #i จะไม่เพิ่มขึ้นจนกว่าข้อมูลใน L จะถูกเช็คโดยตัวเงื่อนไข ด้านล่าง ครบทั้งหมดแล้ว
             while headDigit != None:
-                if i == int(str(headDigit.data)[digit]) :
-                    digitList[indx].append(headDigit.data)
-                headDigit = headDigit.next
-    indx+=1
-    digit-=1
-
+                if i == int(str(headDigit.data)[digit]) : # เช็คดูหลักหน่วยของค่าใน L.head ว่าตรงกับiตามจำนวนรอบมั้ย? 
+                        digitList[indx].append(headDigit.data) 
+                headDigit = headDigit.next #เลื่อนheadDigit ไป Node ตัวถัดไป ใน L
+    indx+=1 #เป็นรอบของการวนซ้ำ 0-4
+    digit-=1 #หลักที่ต้องการจะตรวจสอบ หน่วย สิบ ร้อย พัน
+#ทำเหมือนกันมีดัดแปลงนิดหน่อย
 digit = -1
 indx=0
 digitListNev = [SinglyLinkedListNoDummy() for e in range(maxDigitNev+1)]
 while indx < maxDigitNev+1 :
     if indx != 0:
-        for i in reversed(range(10)) :
+        for i in range(10) : #ไม่ใช้reverseเนื่องจากเราจะ sort จากน้อยไปมาก
             headDigit = digitListNev[indx-1].head
             while headDigit != None:
                 if len(str(headDigit.data)) < -digit and i == 0:
@@ -171,30 +184,35 @@ while indx < maxDigitNev+1 :
                     if i == int(str(headDigit.data)[digit]):
                         digitListNev[indx].append(headDigit.data)
                 headDigit = headDigit.next
-    else :
-        for i in reversed(range(10)) :
+    else :             
+        for i in range(10) :
             headDigit = nL.head
             while headDigit != None:
                 if i == int(str(headDigit.data)[digit]) :
                     digitListNev[indx].append(headDigit.data)
                 headDigit = headDigit.next
     indx+=1
-
+    digit-=1 #อย่าลืมบวกลบส่วนท้าย!!
 
 radix_sort = SinglyLinkedListNoDummy()
 radix_sort_display = SinglyLinkedListNoDummy()
 posNum = digitList[-1].head
 nevNum = digitListNev[-1].head
-while posNum != None: 
-    if nevNum == None:
-        radix_sort.append(posNum.data)
-        radix_sort_display.append(int(posNum.data))
-        posNum = posNum.next
-    else:
-        radix_sort.append(nevNum.data)
-        radix_sort_display.append(int("-"+str(nevNum.data)))
-        nevNum = nevNum.next
-
+#กรณีที่มีทั้งค่าลบและค่าบวกปนกัน
+while nevNum != None: 
+        if posNum == None:
+            radix_sort.append(nevNum.data)
+            radix_sort_display.append(int("-"+str(nevNum.data)))
+            nevNum = nevNum.next
+        else:
+            radix_sort.append(posNum.data)
+            radix_sort_display.append(int(posNum.data))
+            posNum = posNum.next
+#กรณีมีค่าบวกอย่างเดียว
+while posNum!=None:
+            radix_sort.append(posNum.data)
+            radix_sort_display.append(int(posNum.data))
+            posNum = posNum.next
 check = 0
 count = 1
 stop = False
