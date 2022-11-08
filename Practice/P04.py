@@ -1,73 +1,144 @@
+class Node:
+    def __init__(self,data,left=None,right=None):
+        self.data=data
+        self.left=left
+        self.right=right
+    def __str__(self):
+        return str(self.data)
+class BST:
+    def __init__(self):
+        self.root=None
+        self.n=0
 
-'''
-จงสร้างฟังก์ชัน ManageStack() ในการจัดการตัวเลขที่อยู่ใน Stack โดยที่จะมีคำสั่งดังนี้
-A (add) : ทำการเพิ่มตัวเลขเข้าไปใน Stack
-P (pop) : ทำการนำเลขสุดท้ายใน Stack ออก ( ถ้า Stack ว่างให้แสดงผล -1 )
-D (delete) : ทำการลบตัวเลขที่ต้องการใน Stack ( ถ้า Stack ว่างให้แสดงผล -1 )  
-LD (lessthan delete) : ทำการลบตัวเลขที่น้อยกว่าตัวเลขที่กำหนดทั้งหมดออกจาก Stack และแสดงผลตัวเลขที่ถูกลบไป ( ถ้า Stack ว่างให้แสดงผล -1 )
-MD (Morethan delete) : ทำการลบตัวเลขที่มากกว่าตัวเลขที่ต้องการทั้งหมดออกจาก Stack และแสดงผลตัวเลขที่ถูกลบไป ( ถ้า Stack ว่างให้แสดงผล -1 )
-การ Delete ทุกแบบ ถ้าหากไม่มีเลขที่ถูกลบเลย ไม่ต้องแสดงผลอะไรและให้ทำการแสดงผลค่าที่อยู่ใน Stack เมื่อจบโปรแกรม
-*** Hint ***
-ฟังก์ชัน Delete ต่างๆให้สร้าง Stack ขึ้นมาอีก 1 อันเพื่อใช้เป็น Temp ในการเก็บค่าตัวเลขต่างๆ
-'''
-
-
-
-class Stack :
-    def __init__(self,L=None):
-        if L==None:
-            self.item=[]
+    def insert(self,data):
+        if self.root==None:
+            self.root=Node(data)
         else:
-            self.item=L
-    
-    def push(self,e):
-        self.item.append(e)
-    
-    def is_Empty(self):
-        return len(self.item)==0
-    
-    def pop(self):
-        return self.item.pop()
-
-    def peek(self):
-        return self.item[-1]
-
-    def size(self):
-        return str(len(self.item))
-def ManageStack(ls):
-    s=Stack()
-    temp=Stack()
-    for i in ls:
-        e=ls[i].split(' ')
-        if e[0]=='A':
-            s.push(e)
-        elif e[0]=='P':
-            if(s.is_Empty()):
-                print('-1')
-            else:
-                print(s.pop())
-        elif e[0]=='D':
-            
-            if(s.is_Empty()):
-                print('-1')
-            else:
-                for i in s.item:
-                    if e[1]==s.item[i]:
-                        s.item.remove(s.item[i])
+            now=self.root
+            while now!=None:
+                if now.data>data:
+                    if now.left==None:
+                        now.left=Node(data)
+                        break
                     else:
-                        pass
+                        now=now.left
+                else:
+                    if now.right==None:
+                        now.right=Node(data)
+                        break
+                    else:
+                        now=now.right
+        return self.root
 
-        elif e[0]=='LD':
-            if(s.is_Empty()):
-                print('-1')
+    def getMin(self):
+        now=self.root
+        while now.left:
+            now=now.left
+        return now.data
+    
+    def getMax(self):
+        now=self.root
+        while now.right:
+            now=now.right
+        return now.data
+
+    def less_than(self,node,val):
+        if node==None:
+            return ''
+        s=""
+        s+=self.less_than(node.left,val)
+        if int(node.data)<=int(val):
+            s+=str(node.data)+' '
+            self.n+=1
+        s+=self.less_than(node.right,val)
+        return s
+        
+
+    def printTree(self,node,level=0):
+        if node!=None:
+            self.printTree(node.right,level+1)
+            print('        '*level,node)
+            self.printTree(node.left,level+1)
+    def printInorder(self,node):
+        if node:
+            self.printInorder(node.left)
+            print(str(node.data)+' ',end='')
+            self.printInorder(node.right)
+    def parent(self,node,val):
+        if node.data==val:
+            return "None because {} is root".format(val)
+        if node.left ==None and node.right==None:
+            return "Not Found Data"
+        if (node.left!=None and node.left.data==val) or (node.right!=None and node.right.data==val):
+            return node
+
+        if  node.data>val:
+            return self.parent(node.left,val)
+        if node.data<val:
+            return self.parent(node.right,val) 
+    def delete(self,node,val):
+        if self.root==None:
+            print("Error")
+            return 
+        elif self.root.data==val and self.root.left==None and self.root.right==None:
+            self.root=None
+        elif self.root.data==val and self.root.left==None:
+            self.root=self.root.right
+        elif self.root.data==val and self.root.right==None:
+            self.root=self.root.left
+        
+        if node.data!=val:
+            if node.data>val:
+                node.left=self.delete(node.left,val)
             else:
-                temp.push(e[1])
-                if s.
-        elif e[0]=='MD':
+                node.right=self.delete(node.right,val)
+        else:
+            if node.left==None:
+               node=node.right
+               return node
+            if node.right==None:
+                node=node.left
+                return node
+            else:
+                now=node.right
+                while now.left!=None:
+                    now=now.left
+                node.data=now.data
+                node.right=self.delete(node.right,node.data)
+        return node 
 
-    if s.is_Empty()!= True:
-        for i in s:
-            print(s.pop())
+T=BST()
+inp=input("Enter input : ").split(',')
+for i in inp:
+    command=i.split()
+    if command[0]=='i':
+        print("insert",command[1])
+        T.insert(command[1])
+        T.printTree(T.root)
+    if command[0]=='d':
+        print("delete",command[1])
+        T.delete(T.root,command[1])
+        T.printTree(T.root)
+    
 
-inp = input('Enter Input : ').split(',')
+
+'''  
+T = BST()
+inp,k=input('Enter Input : ').split('/')
+inplist = [int(i) for i in inp.split()]
+for i in inplist:
+    root = T.insert(i)
+T.printTree(root) 
+print('--------------------------------------------')
+print("Max :",T.getMax())
+print("Min :",T.getMin())
+
+if T.getMin()<int(k):
+    print(T.less_than(root,int(k)))
+else:
+    print("Not have")
+
+T.printInorder(root)
+print('\n'+str(T.parent(root,int(k))))
+'''
 

@@ -5,18 +5,17 @@ class Node:
         self.right=None
     def __str__(self):
         return str(self.data)
-    
 class BST:
     def __init__(self):
         self.root=None
     def insert(self,data):
-        if self.root == None:
-            self.root=Node(data) 
+        if self.root==None:
+           self.root=Node(data)
         else:
             now=self.root
-            while now != None:
+            while now!=None:
                 if now.data > data:
-                    if now.left==None:
+                    if now.left == None:
                         now.left=Node(data)
                         break
                     else:
@@ -28,29 +27,19 @@ class BST:
                     else:
                         now=now.right
         return self.root
-    def printTree(self,node,level=0):
+    def printTree(self,node,level = 0):
         if node!=None:
-            self.printTree(node.left,level+1)
-            print('      '*level,node)
             self.printTree(node.right,level+1)
+            print('     '*level,node)
+            self.printTree(node.left,level+1)
 
-    def getMax(self):
-        if self.root!=None:
-            now=self.root
-            while now.right!=None:
-                now=now.right
-            return now.data
-    def getMin(self):
-        if self.root!=None:
-            now=self.root
-            while now.left!=None:
-                now=now.left
-            return now.data
 T=BST()
-inp=[int(i) for i in input("Enter input : ").split() ]
-for i in inp :
+inp=[int(i) for i in input("Enter Input : ").split()]
+for i in inp:
     root=T.insert(i)
 T.printTree(root)
-print('------------------------------------------------------')
-print(T.getMax())
-print(T.getMin())
+
+
+
+        
+        
